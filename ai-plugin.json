@@ -1,0 +1,18 @@
+{
+  "schema_version": "v1",
+  "name_for_human": "SamePage",
+  "name_for_model": "samepage",
+  "description_for_human": "A plugin for accessing data stored in various personal knowledge management applications.",
+  "description_for_model": "A plugin for accessing data stored in various personal knowledge management applications.",
+  "auth": {
+    "type": "none"
+  },
+  "api": {
+    "type": "openapi",
+    "url": "https://samepage.network/data/schemas/openapi.yaml",
+    "is_user_authenticated": false
+  },
+  "logo_url": "https://samepage.network/images/logo.png",
+  "contact_email": "support@samepage.network",
+  "legal_info_url": "https://samepage.network/terms-of-use"
+}

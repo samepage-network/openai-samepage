@@ -1,0 +1,85 @@
+openapi: 3.0.1
+info:
+  title: SamePage
+  description: A protocol enabling cross-application collaboration through syncing, querying, and more.
+  version: 'v1'
+servers:
+  - url: https://api.samepage.network
+paths:
+  /extensions/openai/page:
+    post:
+      operationId: getPageContent
+      summary: Get the content from a single page
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/pageRequest'
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/pageResponse'
+  /extensions/openai/query:
+    post:
+      operationId: querySamePage
+      summary: Fetch data shared to the SamePage Network
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/queryRequest'
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/queryResponse'
+components:
+  schemas:
+    queryRequest:
+      type: object
+      properties:
+        targets:
+          type: array
+          items:
+            type: string
+        request:
+          type: object
+          additionalProperties:
+            type: object
+    queryResponse:
+      type: object
+      additionalProperties:
+        type: object
+        additionalProperties:
+    pageRequest:
+      type: object
+      properties:
+        notebookUuid:
+          type: string
+        notebookPageId:
+          type: string
+    pageResponse:
+      type: object
+      properties:
+        content:
+          type: string
+        annotations:
+          type: array
+          items:
+            type: object
+            properties:
+              type:
+                type: string
+              start:
+                type: number
+              end:
+                type: number
+              attributes:
+                type: object
+                additionalProperties:
+                  type: string

@@ -1,68 +1,13 @@
-openapi: 3.0.1
 info:
   title: SamePage
-  description: A protocol enabling cross-application collaboration through syncing, querying, and more.
-  version: 'v1'
+  description: A protocol enabling cross-application collaboration through
+    syncing, querying, and more.
+  version: v1
 servers:
   - url: https://api.samepage.network
-paths:
-  /extensions/openai/page:
-    post:
-      operationId: getPageContent
-      summary: Get the content from a single page
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/pageRequest'
-      responses:
-        "200":
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/pageResponse'
-  /extensions/openai/query:
-    post:
-      operationId: querySamePage
-      summary: Fetch data shared to the SamePage Network
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/queryRequest'
-      responses:
-        "200":
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/queryResponse'
+openapi: 3.0.1
 components:
   schemas:
-    queryRequest:
-      type: object
-      properties:
-        targets:
-          type: array
-          items:
-            type: string
-        request:
-          type: object
-          additionalProperties:
-            type: object
-    queryResponse:
-      type: object
-      additionalProperties:
-        type: object
-        additionalProperties:
-    pageRequest:
-      type: object
-      properties:
-        notebookUuid:
-          type: string
-        notebookPageId:
-          type: string
     pageResponse:
       type: object
       properties:
@@ -71,15 +16,443 @@ components:
         annotations:
           type: array
           items:
+            oneOf:
+              - type: object
+                properties:
+                  start:
+                    type: number
+                  end:
+                    type: number
+                  attributes:
+                    type: object
+                    properties:
+                      level:
+                        type: number
+                      viewType:
+                        type: string
+                        enum:
+                          - bullet
+                          - numbered
+                          - document
+                    required:
+                      - level
+                      - viewType
+                  appAttributes:
+                    type: object
+                    additionalProperties:
+                      type: object
+                      additionalProperties:
+                        type: string
+                  type:
+                    type: string
+                    enum:
+                      - block
+                required:
+                  - start
+                  - end
+                  - attributes
+                  - type
+              - type: object
+                properties:
+                  start:
+                    type: number
+                  end:
+                    type: number
+                  attributes:
+                    type: object
+                    properties:
+                      title:
+                        type: string
+                      parent:
+                        type: string
+                    required:
+                      - title
+                      - parent
+                  appAttributes:
+                    type: object
+                    additionalProperties:
+                      type: object
+                      additionalProperties:
+                        type: string
+                  type:
+                    type: string
+                    enum:
+                      - metadata
+                required:
+                  - start
+                  - end
+                  - attributes
+                  - type
+              - type: object
+                properties:
+                  start:
+                    type: number
+                  end:
+                    type: number
+                  attributes:
+                    type: object
+                    properties:
+                      open:
+                        type: boolean
+                      delimiter:
+                        type: string
+                  appAttributes:
+                    type: object
+                    additionalProperties:
+                      type: object
+                      additionalProperties:
+                        type: string
+                  type:
+                    type: string
+                    enum:
+                      - bold
+                required:
+                  - start
+                  - end
+                  - type
+              - type: object
+                properties:
+                  start:
+                    type: number
+                  end:
+                    type: number
+                  attributes:
+                    type: object
+                    properties:
+                      open:
+                        type: boolean
+                      delimiter:
+                        type: string
+                  appAttributes:
+                    type: object
+                    additionalProperties:
+                      type: object
+                      additionalProperties:
+                        type: string
+                  type:
+                    type: string
+                    enum:
+                      - italics
+                required:
+                  - start
+                  - end
+                  - type
+              - type: object
+                properties:
+                  start:
+                    type: number
+                  end:
+                    type: number
+                  attributes:
+                    type: object
+                    properties:
+                      open:
+                        type: boolean
+                      delimiter:
+                        type: string
+                  appAttributes:
+                    type: object
+                    additionalProperties:
+                      type: object
+                      additionalProperties:
+                        type: string
+                  type:
+                    type: string
+                    enum:
+                      - strikethrough
+                required:
+                  - start
+                  - end
+                  - type
+              - type: object
+                properties:
+                  start:
+                    type: number
+                  end:
+                    type: number
+                  attributes:
+                    type: object
+                    properties:
+                      open:
+                        type: boolean
+                      delimiter:
+                        type: string
+                  appAttributes:
+                    type: object
+                    additionalProperties:
+                      type: object
+                      additionalProperties:
+                        type: string
+                  type:
+                    type: string
+                    enum:
+                      - highlighting
+                required:
+                  - start
+                  - end
+                  - type
+              - type: object
+                properties:
+                  start:
+                    type: number
+                  end:
+                    type: number
+                  attributes:
+                    type: object
+                    properties:
+                      open:
+                        type: boolean
+                      delimiter:
+                        type: string
+                  appAttributes:
+                    type: object
+                    additionalProperties:
+                      type: object
+                      additionalProperties:
+                        type: string
+                  type:
+                    type: string
+                    enum:
+                      - inline
+                required:
+                  - start
+                  - end
+                  - type
+              - type: object
+                properties:
+                  start:
+                    type: number
+                  end:
+                    type: number
+                  attributes:
+                    type: object
+                    properties:
+                      href:
+                        type: string
+                    required:
+                      - href
+                  appAttributes:
+                    type: object
+                    additionalProperties:
+                      type: object
+                      additionalProperties:
+                        type: string
+                  type:
+                    type: string
+                    enum:
+                      - link
+                required:
+                  - start
+                  - end
+                  - attributes
+                  - type
+              - type: object
+                properties:
+                  start:
+                    type: number
+                  end:
+                    type: number
+                  attributes:
+                    type: object
+                    properties:
+                      notebookPageId:
+                        type: string
+                      notebookUuid:
+                        type: string
+                    required:
+                      - notebookPageId
+                      - notebookUuid
+                  appAttributes:
+                    type: object
+                    additionalProperties:
+                      type: object
+                      additionalProperties:
+                        type: string
+                  type:
+                    type: string
+                    enum:
+                      - reference
+                required:
+                  - start
+                  - end
+                  - attributes
+                  - type
+              - type: object
+                properties:
+                  start:
+                    type: number
+                  end:
+                    type: number
+                  attributes:
+                    type: object
+                    properties:
+                      src:
+                        type: string
+                    required:
+                      - src
+                  appAttributes:
+                    type: object
+                    additionalProperties:
+                      type: object
+                      additionalProperties:
+                        type: string
+                  type:
+                    type: string
+                    enum:
+                      - image
+                required:
+                  - start
+                  - end
+                  - attributes
+                  - type
+              - type: object
+                properties:
+                  start:
+                    type: number
+                  end:
+                    type: number
+                  attributes:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                    required:
+                      - name
+                  appAttributes:
+                    type: object
+                    additionalProperties:
+                      type: object
+                      additionalProperties:
+                        type: string
+                  type:
+                    type: string
+                    enum:
+                      - custom
+                required:
+                  - start
+                  - end
+                  - attributes
+                  - type
+              - type: object
+                properties:
+                  start:
+                    type: number
+                  end:
+                    type: number
+                  attributes:
+                    type: object
+                    properties:
+                      language:
+                        type: string
+                      ticks:
+                        type: number
+                    required:
+                      - language
+                  appAttributes:
+                    type: object
+                    additionalProperties:
+                      type: object
+                      additionalProperties:
+                        type: string
+                  type:
+                    type: string
+                    enum:
+                      - code
+                required:
+                  - start
+                  - end
+                  - attributes
+                  - type
+      required:
+        - content
+        - annotations
+    queryResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
             type: object
             properties:
-              type:
+              notebookUuid:
                 type: string
-              start:
-                type: number
-              end:
-                type: number
-              attributes:
-                type: object
-                additionalProperties:
+              results:
+                type: array
+                items:
+                  type: object
+                  additionalProperties:
+                    anyOf:
+                      - type: string
+                      - type: number
+                      - type: boolean
+            required:
+              - notebookUuid
+              - results
+      required:
+        - data
+  parameters: {}
+paths:
+  /extensions/openai/page:
+    post:
+      summary: Get the content from a single page
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                notebookUuid:
                   type: string
+                  description: The application to request
+                notebookPageId:
+                  type: string
+                  description: The page from the application to request
+              required:
+                - notebookUuid
+                - notebookPageId
+              description: The application and the page from the application to request
+      responses:
+        "200":
+          description: Page data in the SamePage AtJson format
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/pageResponse"
+  /extensions/openai/query:
+    post:
+      summary: null
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                targets:
+                  type: array
+                  items:
+                    type: string
+                conditions:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      source:
+                        type: string
+                      target:
+                        type: string
+                      relation:
+                        type: string
+                    required:
+                      - source
+                      - target
+                      - relation
+              required:
+                - targets
+                - conditions
+      responses:
+        "200":
+          description: The data shared to the SamePage Network
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/queryResponse"

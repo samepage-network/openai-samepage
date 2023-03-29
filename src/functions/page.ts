@@ -25,12 +25,11 @@ export const request = zod
     description: "The application and the page from the application to request",
   });
 
-const logic = (req: unknown): InitialSchema => {
-  const data = request.parse(req);
+const logic = (data: zod.infer<typeof request>): InitialSchema => {
   return {
     content: `A quick brown fox jumped over the lazy dog (${data.notebookPageId})`,
     annotations: [{ type: "italics", start: 2, end: 7 }],
   };
 };
 
-export default createAPIGatewayProxyHandler(logic);
+export default createAPIGatewayProxyHandler({ logic, bodySchema: request });

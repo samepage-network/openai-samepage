@@ -8,6 +8,34 @@ servers:
 openapi: 3.0.1
 components:
   schemas:
+    notebooksResponse:
+      type: object
+      properties:
+        notebooks:
+          type: array
+          items:
+            type: object
+            properties:
+              uuid:
+                type: string
+                description: The notebook's UUID
+              workspace:
+                type: string
+                description: The name of the workspace this notebook represents.
+              appName:
+                type: string
+                description: The name of the application this notebook is a part of.
+              email:
+                type: string
+                description: The email address of the user who owns this notebook.
+            required:
+              - uuid
+              - workspace
+              - appName
+              - email
+          description: Notebooks this account has access to.
+      required:
+        - notebooks
     pageResponse:
       type: object
       properties:
@@ -392,8 +420,26 @@ components:
         - data
   parameters: {}
 paths:
+  /extensions/openai/notebooks:
+    post:
+      operationId: notebooks
+      summary: null
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties: {}
+      responses:
+        "200":
+          description: Page data in the SamePage AtJson format
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/notebooksResponse"
   /extensions/openai/page:
     post:
+      operationId: page
       summary: Get the content from a single page
       requestBody:
         content:
@@ -420,7 +466,8 @@ paths:
                 $ref: "#/components/schemas/pageResponse"
   /extensions/openai/query:
     post:
-      summary: null
+      operationId: query
+      summary: Fetch data shared to the SamePage Network
       requestBody:
         content:
           application/json:
@@ -431,6 +478,7 @@ paths:
                   type: array
                   items:
                     type: string
+                  description: The notebook ids this query should target.
                 conditions:
                   type: array
                   items:
@@ -438,14 +486,18 @@ paths:
                     properties:
                       source:
                         type: string
+                        description: The source of the relation
                       target:
                         type: string
+                        description: The target of the relation
                       relation:
                         type: string
+                        description: The relationship of the condition
                     required:
                       - source
                       - target
                       - relation
+                  description: The conditions that muse be met to satisfy the query
               required:
                 - targets
                 - conditions

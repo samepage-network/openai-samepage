@@ -5,7 +5,14 @@
   "description_for_human": "A plugin for accessing data stored in various personal knowledge management applications.",
   "description_for_model": "A plugin for accessing data stored in various personal knowledge management applications.",
   "auth": {
-    "type": "none"
+    "type": "oauth",
+    "client_url": "https://samepage.network/login",
+    "scope": "",
+    "authorization_url": "https://api.samepage.network/oauth",
+    "authorization_content_type": "application/json",
+    "verification_tokens": {
+      "openai": "0c37a36af60b4acfb3431f0225c86296"
+    }
   },
   "api": {
     "type": "openapi",

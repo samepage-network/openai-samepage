@@ -28,6 +28,7 @@
   "homepage": "https://github.com/samepage-network/openai-samepage#readme",
   "dependencies": {
     "@asteasolutions/zod-to-openapi": "^4.5.1",
-    "samepage": "^0.50.2"
+    "esbuild": "^0.17.14",
+    "samepage": "^0.51.4"
   }
 }

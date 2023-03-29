@@ -1,7 +1,8 @@
 import createAPIGatewayProxyHandler from "samepage/backend/createAPIGatewayProxyHandler";
 import zod from "../utils/zod";
+// import apiClient from "samepage/internal/apiClient";
 
-export const summaary = "Fetch data shared to the SamePage Network";
+export const summary = "Fetch data shared to the SamePage Network";
 
 const response = zod.object({
   data: zod
@@ -25,18 +26,29 @@ export const responses = [
 ];
 
 export const request = zod.object({
-  targets: zod.string().array(),
+  targets: zod
+    .string()
+    .array()
+    .openapi({ description: "The notebook ids this query should target." }),
   conditions: zod
     .object({
-      source: zod.string(),
-      target: zod.string(),
-      relation: zod.string(),
+      source: zod
+        .string()
+        .openapi({ description: "The source of the relation" }),
+      target: zod
+        .string()
+        .openapi({ description: "The target of the relation" }),
+      relation: zod
+        .string()
+        .openapi({ description: "The relationship of the condition" }),
     })
-    .array(),
+    .array()
+    .openapi({
+      description: "The conditions that muse be met to satisfy the query",
+    }),
 });
 
-const logic = (req: unknown): ZodResponse => {
-  const data = request.parse(req);
+const logic = (data: zod.infer<typeof request>): ZodResponse => {
   return {
     data: data.targets.map((t) => ({
       notebookUuid: t,
@@ -45,4 +57,4 @@ const logic = (req: unknown): ZodResponse => {
   };
 };
 
-export default createAPIGatewayProxyHandler(logic);
+export default createAPIGatewayProxyHandler({ logic, bodySchema: request });

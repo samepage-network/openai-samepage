@@ -22,6 +22,7 @@ const deploySchemas = async () => {
       const file = f.replace(/\.ts$/, "");
       const endpoint = await import(`../src/functions/${file}`);
       registry.registerPath({
+        operationId: file,
         method: "post",
         path: `/extensions/openai/${file}`,
         summary: endpoint.summary,

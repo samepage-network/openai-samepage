@@ -1,20 +1,45 @@
 import createAPIGatewayProxyHandler from "samepage/backend/createAPIGatewayProxyHandler";
 import zod from "../utils/zod";
-// import apiClient from "samepage/internal/apiClient";
+import apiClient from "samepage/internal/apiClient";
 
 export const summary = "Fetch data shared to the SamePage Network";
+
+const notebookResultStatuses = zod
+  .null()
+  .openapi({
+    description:
+      "The request has been sent to the notebook and we are now waiting for the notebook to accept or reject the request.",
+  })
+  .or(
+    zod.literal("pending").openapi({
+      description:
+        "We are still waiting for the notebook to respond to this request for data.",
+    })
+  )
+  .or(
+    zod.literal("rejected").openapi({
+      description: "The notebook has rejected this request for data.",
+    })
+  );
+
+const notebookResults = zod
+  .record(zod.string().or(zod.number()).or(zod.boolean()))
+  .array();
 
 const response = zod.object({
   data: zod
     .object({
       notebookUuid: zod.string(),
-      results: zod
-        .record(zod.string().or(zod.number()).or(zod.boolean()))
-        .array(),
+      results: notebookResults.or(notebookResultStatuses),
     })
     .array(),
 });
 
+const notebookRequestResponse = zod
+  .object({ results: notebookResults })
+  .or(notebookResultStatuses);
+
+type ZodResponseResults = zod.infer<typeof notebookRequestResponse>;
 type ZodResponse = zod.infer<typeof response>;
 
 export const responses = [
@@ -46,15 +71,37 @@ export const request = zod.object({
     .openapi({
       description: "The conditions that muse be met to satisfy the query",
     }),
+  label: zod.string().openapi({
+    description: "The human-readable label to assign to this query",
+  }),
 });
 
-const logic = (data: zod.infer<typeof request>): ZodResponse => {
+const logic = async (
+  r: zod.infer<typeof request> & {
+    authorization: string;
+  }
+): Promise<ZodResponse> => {
+  const { label, targets, authorization, ...req } = r;
+  const requestData = await apiClient<
+    Record<string, ZodResponseResults>
+  >({
+    method: "notebook-request",
+    request: req,
+    targets,
+    label,
+    token: authorization.replace(/^Bearer /, ""),
+    notebookUuid: "openai",
+  });
+  const data = Object.entries(requestData).map(([notebookUuid, data]) => ({
+    notebookUuid,
+    results: typeof data === "object" && data !== null ? data.results : data,
+  }));
   return {
-    data: data.targets.map((t) => ({
-      notebookUuid: t,
-      results: [],
-    })),
+    data,
   };
 };
 
-export default createAPIGatewayProxyHandler({ logic, bodySchema: request });
+export default createAPIGatewayProxyHandler({
+  logic,
+  bodySchema: request.and(zod.object({ authorization: zod.string() })),
+});

@@ -405,14 +405,28 @@ components:
               notebookUuid:
                 type: string
               results:
-                type: array
-                items:
-                  type: object
-                  additionalProperties:
-                    anyOf:
-                      - type: string
-                      - type: number
-                      - type: boolean
+                anyOf:
+                  - type: array
+                    items:
+                      type: object
+                      additionalProperties:
+                        anyOf:
+                          - type: string
+                          - type: number
+                          - type: boolean
+                  - type: "null"
+                    description: The request has been sent to the notebook and we are now waiting
+                      for the notebook to accept or reject the request.
+                  - type: string
+                    enum:
+                      - pending
+                    description: We are still waiting for the notebook to respond to this request
+                      for data.
+                  - type: string
+                    enum:
+                      - rejected
+                    description: The notebook has rejected this request for data.
+                  - nullable: true
             required:
               - notebookUuid
               - results
@@ -498,9 +512,13 @@ paths:
                       - target
                       - relation
                   description: The conditions that muse be met to satisfy the query
+                label:
+                  type: string
+                  description: The human-readable label to assign to this query
               required:
                 - targets
                 - conditions
+                - label
       responses:
         "200":
           description: The data shared to the SamePage Network

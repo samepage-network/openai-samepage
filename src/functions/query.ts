@@ -1,26 +1,9 @@
 import createAPIGatewayProxyHandler from "samepage/backend/createAPIGatewayProxyHandler";
 import zod from "../utils/zod";
 import apiClient from "samepage/internal/apiClient";
+import requestStatuses from "../utils/requestStatuses";
 
 export const summary = "Fetch data shared to the SamePage Network";
-
-const notebookResultStatuses = zod
-  .null()
-  .openapi({
-    description:
-      "The request has been sent to the notebook and we are now waiting for the notebook to accept or reject the request.",
-  })
-  .or(
-    zod.literal("pending").openapi({
-      description:
-        "We are still waiting for the notebook to respond to this request for data.",
-    })
-  )
-  .or(
-    zod.literal("rejected").openapi({
-      description: "The notebook has rejected this request for data.",
-    })
-  );
 
 const notebookResults = zod
   .record(zod.string().or(zod.number()).or(zod.boolean()))
@@ -30,14 +13,14 @@ const response = zod.object({
   data: zod
     .object({
       notebookUuid: zod.string(),
-      results: notebookResults.or(notebookResultStatuses),
+      results: notebookResults.or(requestStatuses),
     })
     .array(),
 });
 
 const notebookRequestResponse = zod
   .object({ results: notebookResults })
-  .or(notebookResultStatuses);
+  .or(requestStatuses);
 
 type ZodResponseResults = zod.infer<typeof notebookRequestResponse>;
 type ZodResponse = zod.infer<typeof response>;
@@ -82,9 +65,7 @@ const logic = async (
   }
 ): Promise<ZodResponse> => {
   const { label, targets, authorization, ...req } = r;
-  const requestData = await apiClient<
-    Record<string, ZodResponseResults>
-  >({
+  const requestData = await apiClient<Record<string, ZodResponseResults>>({
     method: "notebook-request",
     request: req,
     targets,
@@ -103,5 +84,5 @@ const logic = async (
 
 export default createAPIGatewayProxyHandler({
   logic,
-  bodySchema: request.and(zod.object({ authorization: zod.string() })),
+  bodySchema: request,
 });

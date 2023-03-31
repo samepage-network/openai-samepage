@@ -39,361 +39,380 @@ components:
     pageResponse:
       type: object
       properties:
-        content:
-          type: string
-        annotations:
-          type: array
-          items:
-            oneOf:
-              - type: object
-                properties:
-                  start:
-                    type: number
-                  end:
-                    type: number
-                  attributes:
-                    type: object
-                    properties:
-                      level:
-                        type: number
-                      viewType:
-                        type: string
-                        enum:
-                          - bullet
-                          - numbered
-                          - document
-                    required:
-                      - level
-                      - viewType
-                  appAttributes:
-                    type: object
-                    additionalProperties:
-                      type: object
-                      additionalProperties:
-                        type: string
-                  type:
-                    type: string
-                    enum:
-                      - block
-                required:
-                  - start
-                  - end
-                  - attributes
-                  - type
-              - type: object
-                properties:
-                  start:
-                    type: number
-                  end:
-                    type: number
-                  attributes:
-                    type: object
-                    properties:
-                      title:
-                        type: string
-                      parent:
-                        type: string
-                    required:
-                      - title
-                      - parent
-                  appAttributes:
-                    type: object
-                    additionalProperties:
-                      type: object
-                      additionalProperties:
-                        type: string
-                  type:
-                    type: string
-                    enum:
-                      - metadata
-                required:
-                  - start
-                  - end
-                  - attributes
-                  - type
-              - type: object
-                properties:
-                  start:
-                    type: number
-                  end:
-                    type: number
-                  attributes:
-                    type: object
-                    properties:
-                      open:
-                        type: boolean
-                      delimiter:
-                        type: string
-                  appAttributes:
-                    type: object
-                    additionalProperties:
-                      type: object
-                      additionalProperties:
-                        type: string
-                  type:
-                    type: string
-                    enum:
-                      - bold
-                required:
-                  - start
-                  - end
-                  - type
-              - type: object
-                properties:
-                  start:
-                    type: number
-                  end:
-                    type: number
-                  attributes:
-                    type: object
-                    properties:
-                      open:
-                        type: boolean
-                      delimiter:
-                        type: string
-                  appAttributes:
-                    type: object
-                    additionalProperties:
-                      type: object
-                      additionalProperties:
-                        type: string
-                  type:
-                    type: string
-                    enum:
-                      - italics
-                required:
-                  - start
-                  - end
-                  - type
-              - type: object
-                properties:
-                  start:
-                    type: number
-                  end:
-                    type: number
-                  attributes:
-                    type: object
-                    properties:
-                      open:
-                        type: boolean
-                      delimiter:
-                        type: string
-                  appAttributes:
-                    type: object
-                    additionalProperties:
-                      type: object
-                      additionalProperties:
-                        type: string
-                  type:
-                    type: string
-                    enum:
-                      - strikethrough
-                required:
-                  - start
-                  - end
-                  - type
-              - type: object
-                properties:
-                  start:
-                    type: number
-                  end:
-                    type: number
-                  attributes:
-                    type: object
-                    properties:
-                      open:
-                        type: boolean
-                      delimiter:
-                        type: string
-                  appAttributes:
-                    type: object
-                    additionalProperties:
-                      type: object
-                      additionalProperties:
-                        type: string
-                  type:
-                    type: string
-                    enum:
-                      - highlighting
-                required:
-                  - start
-                  - end
-                  - type
-              - type: object
-                properties:
-                  start:
-                    type: number
-                  end:
-                    type: number
-                  attributes:
-                    type: object
-                    properties:
-                      open:
-                        type: boolean
-                      delimiter:
-                        type: string
-                  appAttributes:
-                    type: object
-                    additionalProperties:
-                      type: object
-                      additionalProperties:
-                        type: string
-                  type:
-                    type: string
-                    enum:
-                      - inline
-                required:
-                  - start
-                  - end
-                  - type
-              - type: object
-                properties:
-                  start:
-                    type: number
-                  end:
-                    type: number
-                  attributes:
-                    type: object
-                    properties:
-                      href:
-                        type: string
-                    required:
-                      - href
-                  appAttributes:
-                    type: object
-                    additionalProperties:
-                      type: object
-                      additionalProperties:
-                        type: string
-                  type:
-                    type: string
-                    enum:
-                      - link
-                required:
-                  - start
-                  - end
-                  - attributes
-                  - type
-              - type: object
-                properties:
-                  start:
-                    type: number
-                  end:
-                    type: number
-                  attributes:
-                    type: object
-                    properties:
-                      notebookPageId:
-                        type: string
-                      notebookUuid:
-                        type: string
-                    required:
-                      - notebookPageId
-                      - notebookUuid
-                  appAttributes:
-                    type: object
-                    additionalProperties:
-                      type: object
-                      additionalProperties:
-                        type: string
-                  type:
-                    type: string
-                    enum:
-                      - reference
-                required:
-                  - start
-                  - end
-                  - attributes
-                  - type
-              - type: object
-                properties:
-                  start:
-                    type: number
-                  end:
-                    type: number
-                  attributes:
-                    type: object
-                    properties:
-                      src:
-                        type: string
-                    required:
-                      - src
-                  appAttributes:
-                    type: object
-                    additionalProperties:
-                      type: object
-                      additionalProperties:
-                        type: string
-                  type:
-                    type: string
-                    enum:
-                      - image
-                required:
-                  - start
-                  - end
-                  - attributes
-                  - type
-              - type: object
-                properties:
-                  start:
-                    type: number
-                  end:
-                    type: number
-                  attributes:
-                    type: object
-                    properties:
-                      name:
-                        type: string
-                    required:
-                      - name
-                  appAttributes:
-                    type: object
-                    additionalProperties:
-                      type: object
-                      additionalProperties:
-                        type: string
-                  type:
-                    type: string
-                    enum:
-                      - custom
-                required:
-                  - start
-                  - end
-                  - attributes
-                  - type
-              - type: object
-                properties:
-                  start:
-                    type: number
-                  end:
-                    type: number
-                  attributes:
-                    type: object
-                    properties:
-                      language:
-                        type: string
-                      ticks:
-                        type: number
-                    required:
-                      - language
-                  appAttributes:
-                    type: object
-                    additionalProperties:
-                      type: object
-                      additionalProperties:
-                        type: string
-                  type:
-                    type: string
-                    enum:
-                      - code
-                required:
-                  - start
-                  - end
-                  - attributes
-                  - type
+        data:
+          anyOf:
+            - type: object
+              properties:
+                content:
+                  type: string
+                annotations:
+                  type: array
+                  items:
+                    oneOf:
+                      - type: object
+                        properties:
+                          start:
+                            type: number
+                          end:
+                            type: number
+                          attributes:
+                            type: object
+                            properties:
+                              level:
+                                type: number
+                              viewType:
+                                type: string
+                                enum:
+                                  - bullet
+                                  - numbered
+                                  - document
+                            required:
+                              - level
+                              - viewType
+                          appAttributes:
+                            type: object
+                            additionalProperties:
+                              type: object
+                              additionalProperties:
+                                type: string
+                          type:
+                            type: string
+                            enum:
+                              - block
+                        required:
+                          - start
+                          - end
+                          - attributes
+                          - type
+                      - type: object
+                        properties:
+                          start:
+                            type: number
+                          end:
+                            type: number
+                          attributes:
+                            type: object
+                            properties:
+                              title:
+                                type: string
+                              parent:
+                                type: string
+                            required:
+                              - title
+                              - parent
+                          appAttributes:
+                            type: object
+                            additionalProperties:
+                              type: object
+                              additionalProperties:
+                                type: string
+                          type:
+                            type: string
+                            enum:
+                              - metadata
+                        required:
+                          - start
+                          - end
+                          - attributes
+                          - type
+                      - type: object
+                        properties:
+                          start:
+                            type: number
+                          end:
+                            type: number
+                          attributes:
+                            type: object
+                            properties:
+                              open:
+                                type: boolean
+                              delimiter:
+                                type: string
+                          appAttributes:
+                            type: object
+                            additionalProperties:
+                              type: object
+                              additionalProperties:
+                                type: string
+                          type:
+                            type: string
+                            enum:
+                              - bold
+                        required:
+                          - start
+                          - end
+                          - type
+                      - type: object
+                        properties:
+                          start:
+                            type: number
+                          end:
+                            type: number
+                          attributes:
+                            type: object
+                            properties:
+                              open:
+                                type: boolean
+                              delimiter:
+                                type: string
+                          appAttributes:
+                            type: object
+                            additionalProperties:
+                              type: object
+                              additionalProperties:
+                                type: string
+                          type:
+                            type: string
+                            enum:
+                              - italics
+                        required:
+                          - start
+                          - end
+                          - type
+                      - type: object
+                        properties:
+                          start:
+                            type: number
+                          end:
+                            type: number
+                          attributes:
+                            type: object
+                            properties:
+                              open:
+                                type: boolean
+                              delimiter:
+                                type: string
+                          appAttributes:
+                            type: object
+                            additionalProperties:
+                              type: object
+                              additionalProperties:
+                                type: string
+                          type:
+                            type: string
+                            enum:
+                              - strikethrough
+                        required:
+                          - start
+                          - end
+                          - type
+                      - type: object
+                        properties:
+                          start:
+                            type: number
+                          end:
+                            type: number
+                          attributes:
+                            type: object
+                            properties:
+                              open:
+                                type: boolean
+                              delimiter:
+                                type: string
+                          appAttributes:
+                            type: object
+                            additionalProperties:
+                              type: object
+                              additionalProperties:
+                                type: string
+                          type:
+                            type: string
+                            enum:
+                              - highlighting
+                        required:
+                          - start
+                          - end
+                          - type
+                      - type: object
+                        properties:
+                          start:
+                            type: number
+                          end:
+                            type: number
+                          attributes:
+                            type: object
+                            properties:
+                              open:
+                                type: boolean
+                              delimiter:
+                                type: string
+                          appAttributes:
+                            type: object
+                            additionalProperties:
+                              type: object
+                              additionalProperties:
+                                type: string
+                          type:
+                            type: string
+                            enum:
+                              - inline
+                        required:
+                          - start
+                          - end
+                          - type
+                      - type: object
+                        properties:
+                          start:
+                            type: number
+                          end:
+                            type: number
+                          attributes:
+                            type: object
+                            properties:
+                              href:
+                                type: string
+                            required:
+                              - href
+                          appAttributes:
+                            type: object
+                            additionalProperties:
+                              type: object
+                              additionalProperties:
+                                type: string
+                          type:
+                            type: string
+                            enum:
+                              - link
+                        required:
+                          - start
+                          - end
+                          - attributes
+                          - type
+                      - type: object
+                        properties:
+                          start:
+                            type: number
+                          end:
+                            type: number
+                          attributes:
+                            type: object
+                            properties:
+                              notebookPageId:
+                                type: string
+                              notebookUuid:
+                                type: string
+                            required:
+                              - notebookPageId
+                              - notebookUuid
+                          appAttributes:
+                            type: object
+                            additionalProperties:
+                              type: object
+                              additionalProperties:
+                                type: string
+                          type:
+                            type: string
+                            enum:
+                              - reference
+                        required:
+                          - start
+                          - end
+                          - attributes
+                          - type
+                      - type: object
+                        properties:
+                          start:
+                            type: number
+                          end:
+                            type: number
+                          attributes:
+                            type: object
+                            properties:
+                              src:
+                                type: string
+                            required:
+                              - src
+                          appAttributes:
+                            type: object
+                            additionalProperties:
+                              type: object
+                              additionalProperties:
+                                type: string
+                          type:
+                            type: string
+                            enum:
+                              - image
+                        required:
+                          - start
+                          - end
+                          - attributes
+                          - type
+                      - type: object
+                        properties:
+                          start:
+                            type: number
+                          end:
+                            type: number
+                          attributes:
+                            type: object
+                            properties:
+                              name:
+                                type: string
+                            required:
+                              - name
+                          appAttributes:
+                            type: object
+                            additionalProperties:
+                              type: object
+                              additionalProperties:
+                                type: string
+                          type:
+                            type: string
+                            enum:
+                              - custom
+                        required:
+                          - start
+                          - end
+                          - attributes
+                          - type
+                      - type: object
+                        properties:
+                          start:
+                            type: number
+                          end:
+                            type: number
+                          attributes:
+                            type: object
+                            properties:
+                              language:
+                                type: string
+                              ticks:
+                                type: number
+                            required:
+                              - language
+                          appAttributes:
+                            type: object
+                            additionalProperties:
+                              type: object
+                              additionalProperties:
+                                type: string
+                          type:
+                            type: string
+                            enum:
+                              - code
+                        required:
+                          - start
+                          - end
+                          - attributes
+                          - type
+              required:
+                - content
+                - annotations
+            - type: "null"
+              description: The request has been sent to the notebook and we are now waiting
+                for the notebook to accept or reject the request.
+            - type: string
+              enum:
+                - pending
+              description: We are still waiting for the notebook to respond to this request
+                for data.
+            - type: string
+              enum:
+                - rejected
+              description: The notebook has rejected this request for data.
+            - nullable: true
       required:
-        - content
-        - annotations
+        - data
     queryResponse:
       type: object
       properties:

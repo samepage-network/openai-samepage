@@ -4,7 +4,7 @@ const requestStatuses = zod
   .null()
   .openapi({
     description:
-      "The request has been sent to the notebook and we are now waiting for the notebook to accept or reject the request.",
+      "The request has been sent to the notebook and we are now waiting for the notebook to accept or reject the request. It cannot answer right now due to being offline.",
   })
   .or(
     zod.literal("pending").openapi({

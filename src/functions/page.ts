@@ -1,8 +1,8 @@
 import createAPIGatewayProxyHandler from "samepage/backend/createAPIGatewayProxyHandler";
 import { zInitialSchema } from "samepage/internal/types";
-import apiClient from "samepage/internal/apiClient";
 import zod from "../utils/zod";
 import requestStatuses from "../utils/requestStatuses";
+import sendCrossNotebookRequest from "src/utils/sendCrossNotebookRequest";
 
 const zResponseData = zInitialSchema.or(requestStatuses);
 
@@ -22,11 +22,9 @@ export const summary = "Get the content from a single page";
 
 export const request = zod
   .object({
-    notebookUuid: zod
-      .string()
-      .openapi({
-        description: "The application to request. Must be in UUID format.",
-      }),
+    notebookUuid: zod.string().openapi({
+      description: "The application to request. Must be in UUID format.",
+    }),
     notebookPageId: zod
       .string()
       .openapi({ description: "The page from the application to request" }),
@@ -38,16 +36,14 @@ export const request = zod
 const logic = async (
   data: zod.infer<typeof request> & { authorization: string }
 ): Promise<zod.infer<typeof response>> => {
-  const { notebookPageId, notebookUuid, authorization = "" } = data;
-  const responseData = await apiClient<
-    Record<string, zod.infer<typeof zResponseData>>
+  const { notebookUuid, notebookPageId } = data;
+  const responseData = await sendCrossNotebookRequest<
+    zod.infer<typeof zResponseData>
   >({
-    method: "notebook-request",
-    request: { notebookPageId },
-    targets: [notebookUuid],
+    authorization: data.authorization,
     label: notebookPageId,
-    token: authorization.replace(/^Bearer /, ""),
-    notebookUuid: "openai",
+    targets: [notebookUuid],
+    request: { notebookPageId },
   });
   return {
     data: responseData[notebookUuid],

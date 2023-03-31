@@ -1,7 +1,7 @@
 import createAPIGatewayProxyHandler from "samepage/backend/createAPIGatewayProxyHandler";
 import zod from "../utils/zod";
-import apiClient from "samepage/internal/apiClient";
 import requestStatuses from "../utils/requestStatuses";
+import sendCrossNotebookRequest from "src/utils/sendCrossNotebookRequest";
 
 export const summary = "Fetch data shared to the SamePage Network";
 
@@ -62,18 +62,17 @@ export const request = zod.object({
 const logic = async (
   r: zod.infer<typeof request> & {
     authorization: string;
+    requestId: string;
   }
 ): Promise<ZodResponse> => {
-  const { label, targets, authorization, ...req } = r;
-  const requestData = await apiClient<Record<string, ZodResponseResults>>({
-    method: "notebook-request",
+  const { label, targets, authorization, requestId, ...req } = r;
+  const responseData = await sendCrossNotebookRequest<ZodResponseResults>({
+    authorization,
     request: req,
     targets,
     label,
-    token: authorization.replace(/^Bearer /, ""),
-    notebookUuid: "openai",
   });
-  const data = Object.entries(requestData).map(([notebookUuid, data]) => ({
+  const data = Object.entries(responseData).map(([notebookUuid, data]) => ({
     notebookUuid,
     results: typeof data === "object" && data !== null ? data.results : data,
   }));

@@ -1,6 +1,6 @@
 {
   "name": "openai-samepage",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "Official OpenAI client into the inter-tool protocol, SamePage.",
   "main": "./dist/index.js",
   "scripts": {

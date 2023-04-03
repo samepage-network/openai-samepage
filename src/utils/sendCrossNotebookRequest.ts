@@ -34,7 +34,11 @@ const sendCrossNotebookRequest = async <T>({
         const responseData = data as Record<string, T>;
         if (responses === 0) {
           clearTimeout(noResponseTimeout);
-          if (Object.values(responseData).some((r) => r !== "rejected")) {
+          if (
+            Object.values(responseData).some(
+              (r) => (r as T | "rejected") !== "rejected"
+            )
+          ) {
             noResponseTimeout = setTimeout(() => {
               resolve(responseData);
             }, 2500);

@@ -8,7 +8,7 @@ servers:
 openapi: 3.0.1
 components:
   schemas:
-    notebooksResponse:
+    notebooks/getResponse:
       type: object
       properties:
         notebooks:
@@ -36,7 +36,7 @@ components:
           description: Notebooks this account has access to.
       required:
         - notebooks
-    pageResponse:
+    page/postResponse:
       type: object
       properties:
         data:
@@ -400,7 +400,8 @@ components:
                 - annotations
             - type: "null"
               description: The request has been sent to the notebook and we are now waiting
-                for the notebook to accept or reject the request.
+                for the notebook to accept or reject the request. It cannot
+                answer right now due to being offline.
             - type: string
               enum:
                 - pending
@@ -413,7 +414,7 @@ components:
             - nullable: true
       required:
         - data
-    queryResponse:
+    query/postResponse:
       type: object
       properties:
         data:
@@ -435,7 +436,8 @@ components:
                           - type: boolean
                   - type: "null"
                     description: The request has been sent to the notebook and we are now waiting
-                      for the notebook to accept or reject the request.
+                      for the notebook to accept or reject the request. It
+                      cannot answer right now due to being offline.
                   - type: string
                     enum:
                       - pending
@@ -454,22 +456,16 @@ components:
   parameters: {}
 paths:
   /extensions/openai/notebooks:
-    post:
+    get:
       operationId: notebooks
-      summary: null
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              properties: {}
+      summary: List all of the notebooks this user has access to on the SamePage Network
       responses:
         "200":
-          description: Page data in the SamePage AtJson format
+          description: A list of notebooks this account has access to
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/notebooksResponse"
+                $ref: "#/components/schemas/notebooks/getResponse"
   /extensions/openai/page:
     post:
       operationId: page
@@ -482,7 +478,7 @@ paths:
               properties:
                 notebookUuid:
                   type: string
-                  description: The application to request
+                  description: The application to request. Must be in UUID format.
                 notebookPageId:
                   type: string
                   description: The page from the application to request
@@ -496,7 +492,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/pageResponse"
+                $ref: "#/components/schemas/page/postResponse"
   /extensions/openai/query:
     post:
       operationId: query
@@ -531,12 +527,16 @@ paths:
                       - target
                       - relation
                   description: The conditions that muse be met to satisfy the query
+                returnNode:
+                  type: string
+                  description: The node acting as the source of the entire query
                 label:
                   type: string
                   description: The human-readable label to assign to this query
               required:
                 - targets
                 - conditions
+                - returnNode
                 - label
       responses:
         "200":
@@ -544,4 +544,4 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/queryResponse"
+                $ref: "#/components/schemas/query/postResponse"

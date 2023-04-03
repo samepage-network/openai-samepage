@@ -1,4 +1,4 @@
-import zod from "../utils/zod";
+import zod from "../../src/utils/zod";
 import apiClient from "samepage/internal/apiClient";
 import createAPIGatewayProxyHandler from "samepage/backend/createAPIGatewayProxyHandler";
 
@@ -23,10 +23,12 @@ const schema = zod.object({
 export const responses = [
   {
     schema,
-    description: "Page data in the SamePage AtJson format",
+    description: "A list of notebooks this account has access to",
     status: 200,
   },
 ];
+
+export const summary = "List all of the notebooks this user has access to on the SamePage Network";
 
 type ZodResponse = zod.infer<typeof schema>;
 

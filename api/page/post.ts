@@ -1,8 +1,8 @@
 import createAPIGatewayProxyHandler from "samepage/backend/createAPIGatewayProxyHandler";
 import { zInitialSchema } from "samepage/internal/types";
-import zod from "../utils/zod";
-import requestStatuses from "../utils/requestStatuses";
-import sendCrossNotebookRequest from "src/utils/sendCrossNotebookRequest";
+import zod from "../../src/utils/zod";
+import requestStatuses from "../../src/utils/requestStatuses";
+import sendCrossNotebookRequest from "../../src/utils/sendCrossNotebookRequest";
 
 const zResponseData = zInitialSchema.or(requestStatuses);
 

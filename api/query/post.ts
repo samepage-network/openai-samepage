@@ -1,7 +1,7 @@
 import createAPIGatewayProxyHandler from "samepage/backend/createAPIGatewayProxyHandler";
-import zod from "../utils/zod";
-import requestStatuses from "../utils/requestStatuses";
-import sendCrossNotebookRequest from "src/utils/sendCrossNotebookRequest";
+import zod from "../../src/utils/zod";
+import requestStatuses from "../../src/utils/requestStatuses";
+import sendCrossNotebookRequest from "../../src/utils/sendCrossNotebookRequest";
 
 export const summary = "Fetch data shared to the SamePage Network";
 
@@ -54,6 +54,11 @@ export const request = zod.object({
     .openapi({
       description: "The conditions that muse be met to satisfy the query",
     }),
+  returnNode: zod
+    .string()
+    .openapi({
+      description: "The node acting as the source of the entire query",
+    }),
   label: zod.string().openapi({
     description: "The human-readable label to assign to this query",
   }),
@@ -68,7 +73,8 @@ const logic = async (
   const { label, targets, authorization, requestId, ...req } = r;
   const responseData = await sendCrossNotebookRequest<ZodResponseResults>({
     authorization,
-    request: req,
+    // why is this Typescript erroring... https://github.com/microsoft/TypeScript/issues/15300
+    request: { ...req },
     targets,
     label,
   });

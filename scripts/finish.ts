@@ -6,11 +6,19 @@ import {
 import yaml from "yaml";
 import readDir from "samepage/scripts/internal/readDir";
 
-const copyAndReplace = ({ file, dest }: { file: string; dest: string }) => {
-  const content = fs
-    .readFileSync(file)
-    .toString()
-    .replace(/samepage\.network/g, "samepage.ngrok.io");
+const copyAndReplace = ({
+  file,
+  dest,
+  replacements,
+}: {
+  file: string;
+  dest: string;
+  replacements: { source: RegExp; target: string }[];
+}) => {
+  const content = replacements.reduce(
+    (p, c) => p.replace(c.source, c.target),
+    fs.readFileSync(file).toString()
+  );
   if (!fs.existsSync(dest)) fs.mkdirSync(dest, { recursive: true });
   fs.writeFileSync(`${dest}/${file}`, content);
 };
@@ -77,14 +85,30 @@ const deploySchemas = async () => {
   });
   fs.writeFileSync("openapi.yaml", yaml.stringify(openApiObject));
 
-  copyAndReplace({
-    file: "ai-plugin.json",
-    dest: "../samepage.network/public/.well-known",
-  });
-  copyAndReplace({
-    file: "openapi.yaml",
-    dest: "../samepage.network/public/data/schemas",
-  });
+  if (process.env.NODE_ENV !== "production") {
+    copyAndReplace({
+      file: "ai-plugin.json",
+      dest: "../samepage.network/public/.well-known",
+      replacements: [
+        { source: /samepage\.network/g, target: "samepage.ngrok.io" },
+        {
+          source: /"name_for_human": "SamePage"/,
+          target: `"name_for_human": "SamePage (DEV)"`,
+        },
+        {
+          source: /"name_for_model": "samepage"/g,
+          target: `"name_for_model": "samepage-dev"`,
+        },
+      ],
+    });
+    copyAndReplace({
+      file: "openapi.yaml",
+      dest: "../samepage.network/public/data/schemas",
+      replacements: [
+        { source: /samepage\.network/g, target: "samepage.ngrok.io" },
+      ],
+    });
+  }
 };
 
 deploySchemas().then(() => console.log("Done!"));

@@ -29,7 +29,7 @@
   "dependencies": {
     "@asteasolutions/zod-to-openapi": "^4.5.1",
     "esbuild": "^0.17.14",
-    "samepage": "^0.55.0"
+    "samepage": "^0.55.1"
   },
   "devDependencies": {
     "@types/ws": "^8.5.4"

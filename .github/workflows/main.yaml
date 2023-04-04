@@ -25,7 +25,7 @@ jobs:
         run: npm install
       # TODO - work into build process via custom plugin
       - name: schemas
-        run: ts-node scripts/finish
+        run: npx ts-node scripts/finish
         env:
           NODE_ENV: production
       - name: build

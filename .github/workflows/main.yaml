@@ -29,4 +29,4 @@ jobs:
         env:
           NODE_ENV: production
       - name: build
-        run: npx samepage build --review scripts/review
+        run: npx samepage build --review scripts/review.js

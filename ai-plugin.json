@@ -11,7 +11,7 @@
     "authorization_url": "https://api.samepage.network/oauth",
     "authorization_content_type": "application/json",
     "verification_tokens": {
-      "openai": "9915d81c2d734423b72e22772ebdfdeb"
+      "openai": "3f025610774c4ba9a5a5fbf961353131"
     }
   },
   "api": {

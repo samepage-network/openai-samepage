@@ -93,12 +93,16 @@ const deploySchemas = async () => {
         { source: /samepage\.network/g, target: "samepage.ngrok.io" },
         {
           source: /"name_for_human": "SamePage"/,
-          target: `"name_for_human": "SamePage (DEV)"`,
+          target: `"name_for_human": "SamePage_DEV"`,
         },
         {
           source: /"name_for_model": "samepage"/g,
-          target: `"name_for_model": "samepage-dev"`,
+          target: `"name_for_model": "samepage_dev"`,
         },
+        {
+          source: /"openai": "[a-f0-9]+"/,
+          target: `"openai": "be5c245579d1403bbc01130d8847276d"`,
+        }
       ],
     });
     copyAndReplace({
